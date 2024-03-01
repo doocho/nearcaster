@@ -1,5 +1,6 @@
 import neynarClient from "@/clients/neynar";
 import getSvg from "@/utils/_svg";
+import { OpSepoliaTestnet } from "@thirdweb-dev/chains";
 import { Engine } from "@thirdweb-dev/engine";
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 import { NextResponse } from "next/server";
@@ -14,7 +15,7 @@ export async function POST(request: Request) {
       throw new Error("Missing environment variables");
     }
 
-    const thirdwebSDK = new ThirdwebSDK("mumbai", {
+    const thirdwebSDK = new ThirdwebSDK(OpSepoliaTestnet, {
       secretKey: process.env.TW_SECRET_KEY,
     });
 
@@ -46,7 +47,7 @@ export async function POST(request: Request) {
     });
 
     const { result } = await engine.erc1155.mintTo(
-      "mumbai",
+      OpSepoliaTestnet.chainId.toString(),
       process.env.NFT_CONTRACT_ADDRESS!,
       process.env.TW_BACKEND_WALLET!,
       {
@@ -84,7 +85,7 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     return NextResponse.json(
-      { message: "Something went wrong" },
+      { message: "Something went wrong: " + error },
       { status: 500 }
     );
   }
